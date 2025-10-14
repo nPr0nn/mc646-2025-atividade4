@@ -53,10 +53,9 @@ brew install graphviz
 4. Make src discoverable to Python by installing your package in editable mode
 
 ```bash
-```
 pip install -e .
 ```
-```
+
 
 ## Running `generate_graph.py`
 
