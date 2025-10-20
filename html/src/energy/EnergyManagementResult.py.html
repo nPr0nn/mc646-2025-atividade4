@@ -1,0 +1,61 @@
+<html><body><h1>src/energy/EnergyManagementResult.py</h1>Killed 4 out of 10 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 6</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -16,7 +16,7 @@
+ 
+     def __repr__(self) -> str:
+         """Retorna uma representação legível do objeto."""
+-        return (f"EnergyManagementResult(device_status={self.device_status}, "
++        return (f"XXEnergyManagementResult(device_status={self.device_status}, XX"
+                 f"energy_saving_mode={self.energy_saving_mode}, "
+                 f"temperature_regulation_active={self.temperature_regulation_active}, "
+                 f"total_energy_used={self.total_energy_used}, "
+</pre><h3>Mutant 7</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -17,7 +17,7 @@
+     def __repr__(self) -> str:
+         """Retorna uma representação legível do objeto."""
+         return (f"EnergyManagementResult(device_status={self.device_status}, "
+-                f"energy_saving_mode={self.energy_saving_mode}, "
++                f"XXenergy_saving_mode={self.energy_saving_mode}, XX"
+                 f"temperature_regulation_active={self.temperature_regulation_active}, "
+                 f"total_energy_used={self.total_energy_used}, "
+                 f"devices_were_on={self.devices_were_on})") # Adicionado na representação
+</pre><h3>Mutant 8</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -18,6 +18,6 @@
+         """Retorna uma representação legível do objeto."""
+         return (f"EnergyManagementResult(device_status={self.device_status}, "
+                 f"energy_saving_mode={self.energy_saving_mode}, "
+-                f"temperature_regulation_active={self.temperature_regulation_active}, "
++                f"XXtemperature_regulation_active={self.temperature_regulation_active}, XX"
+                 f"total_energy_used={self.total_energy_used}, "
+                 f"devices_were_on={self.devices_were_on})") # Adicionado na representação
+</pre><h3>Mutant 9</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -19,5 +19,5 @@
+         return (f"EnergyManagementResult(device_status={self.device_status}, "
+                 f"energy_saving_mode={self.energy_saving_mode}, "
+                 f"temperature_regulation_active={self.temperature_regulation_active}, "
+-                f"total_energy_used={self.total_energy_used}, "
++                f"XXtotal_energy_used={self.total_energy_used}, XX"
+                 f"devices_were_on={self.devices_were_on})") # Adicionado na representação
+</pre><h3>Mutant 10</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -20,4 +20,4 @@
+                 f"energy_saving_mode={self.energy_saving_mode}, "
+                 f"temperature_regulation_active={self.temperature_regulation_active}, "
+                 f"total_energy_used={self.total_energy_used}, "
+-                f"devices_were_on={self.devices_were_on})") # Adicionado na representação
++                f"XXdevices_were_on={self.devices_were_on})XX") # Adicionado na representação
+</pre><h2>Suspicious</h2>Mutants that made the test suite take longer, but otherwise seemed ok<h3>Mutant 5</h3><pre>--- src/energy/EnergyManagementResult.py
++++ src/energy/EnergyManagementResult.py
+@@ -12,7 +12,7 @@
+         self.energy_saving_mode = energy_saving_mode
+         self.temperature_regulation_active = temperature_regulation_active
+         self.total_energy_used = total_energy_used
+-        self.devices_were_on = devices_were_on  # Atribuição do novo parâmetro
++        self.devices_were_on = None  # Atribuição do novo parâmetro
+ 
+     def __repr__(self) -> str:
+         """Retorna uma representação legível do objeto."""
+</pre></body></html>
