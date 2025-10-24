@@ -19,16 +19,11 @@ class FraudDetectionSystem:
         verification_required = False
         risk_score = 0
 
-        # Função auxiliar para acumular risco
-        def add_risk(value: int):
-            nonlocal risk_score
-            risk_score += value
-
         # 1. Verifica o valor da transação
         if current_transaction.amount > 10000:
             is_fraudulent = True
             verification_required = True
-            add_risk(50)  # agora cumulativo
+            risk_score += 50
 
         # 2. Verifica por transações excessivas na última hora
         recent_transaction_count = 0
@@ -40,7 +35,7 @@ class FraudDetectionSystem:
 
         if recent_transaction_count > 10:
             is_blocked = True
-            add_risk(30)
+            risk_score += 30
 
         # 3. Verifica mudança de localização em um curto período de tempo
         if previous_transactions:
@@ -54,12 +49,12 @@ class FraudDetectionSystem:
             ):
                 is_fraudulent = True
                 verification_required = True
-                add_risk(20)
+                risk_score += 20
 
         # 4. Verifica se a localização está na lista de bloqueio (blacklist)
         if current_transaction.location in blacklisted_locations:
             is_blocked = True
-            risk_score = 100  # regra especial, sobrescreve tudo
+            risk_score = 100
 
         return FraudCheckResult(
             is_fraudulent, is_blocked, verification_required, risk_score
