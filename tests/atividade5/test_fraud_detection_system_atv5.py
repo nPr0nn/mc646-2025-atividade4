@@ -23,7 +23,7 @@ def fds():
     return FraudDetectionSystem()
 
 
-def test_boundary_amount_equal(fds):
+def test_CT10_valor_limite_exato(fds):
     """Teste do limite exato do valor: NÃO deve acionar fraude (mutantes: 74, 80)"""
     current = Transaction(
         amount=10000, timestamp=datetime(2025, 10, 1, 12, 0, 0), location="Brasil"
@@ -36,7 +36,7 @@ def test_boundary_amount_equal(fds):
     assert result.risk_score == 0
 
 
-def test_boundary_amount_above(fds):
+def test_CT11_valor_limite_acima(fds):
     """Teste ligeiramente acima do limite: deve acionar fraude (mutantes: 74, 75, 80)"""
     current = Transaction(
         amount=10001, timestamp=datetime(2025, 10, 1, 12, 0, 0), location="Brasil"
@@ -49,7 +49,7 @@ def test_boundary_amount_above(fds):
     assert result.risk_score == 50
 
 
-def test_boundary_transaction_count(fds):
+def test_CT12_transacoes_limite_exato(fds):
     """Teste de exatamente 10 transações em 60 minutos: NÃO deve acionar bloqueio (mutantes: 83, 88, 90, 91, 94, 95)"""
     current = Transaction(
         amount=100, timestamp=datetime(2025, 10, 1, 12, 0, 0), location="Brasil"
@@ -67,7 +67,7 @@ def test_boundary_transaction_count(fds):
     assert result.risk_score == 0
 
 
-def test_boundary_time_exact_30(fds):
+def test_CT13_diferenca_tempo_30_min(fds):
     """Teste de diferença exata de 30 minutos: NÃO deve acionar fraude por localização (mutantes: 108, 110, 111)"""
     current = Transaction(
         amount=100,
@@ -86,7 +86,7 @@ def test_boundary_time_exact_30(fds):
     assert result.risk_score == 0
 
 
-def test_boundary_time_exact_60(fds):
+def test_CT14_janela_transacoes_60_min(fds):
     """Teste da janela exata de 60 minutos: NÃO deve acionar regra de transações excessivas (mutantes: 83, 88, 90, 91, 94, 95)"""
     current = Transaction(
         amount=100, timestamp=datetime(2025, 10, 1, 13, 0, 0), location="Brasil"
@@ -104,10 +104,8 @@ def test_boundary_time_exact_60(fds):
     assert result.risk_score == 0
 
 
-def test_time_diff_boundary_less_than_60(fds):
-    """
-    Mutantes #88 e #90: Detecta mudança de <=60 para <60 minutos
-    """
+def test_CT15_diferenca_tempo_menor_ou_igual_60(fds):
+    """Mutantes #88 e #90: Detecta mudança de <=60 para <60 minutos"""
     base_time = datetime(2025, 10, 1, 12, 0, 0)
     previous = [
         Transaction(
@@ -121,10 +119,8 @@ def test_time_diff_boundary_less_than_60(fds):
     assert result.is_blocked, "Exatamente 60 minutos devem estar incluídos na janela"
 
 
-def test_time_diff_boundary_more_than_60(fds):
-    """
-    Mutante #91: Detecta mudança de <=60 para <=61 minutos
-    """
+def test_CT16_diferenca_tempo_maior_60(fds):
+    """Mutante #91: Detecta mudança de <=60 para <=61 minutos"""
     base_time = datetime(2025, 10, 1, 12, 0, 0)
     previous = [
         Transaction(
