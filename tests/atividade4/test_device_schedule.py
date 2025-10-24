@@ -4,6 +4,7 @@ from src.energy.EnergyManagementSystem import EnergyManagementSystem
 from src.energy.DeviceSchedule import DeviceSchedule
 from src.energy.EnergyManagementResult import EnergyManagementResult
 
+
 @pytest.fixture
 def ems():
     return EnergyManagementSystem()
@@ -13,7 +14,7 @@ def test_CT01_operacao_normal(ems):
     initial_device_status = {"Light": False, "TV": False, "AC": False}
     current_time = datetime(2025, 10, 15, 14, 0, 0)
     device_priorities = {"Light": 2, "TV": 1, "AC": 3}
-    
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=False,
@@ -42,7 +43,7 @@ def test_CT02_modo_economia_ativado(ems):
     initial_device_status = {"Light": False, "TV": False, "Heater": False}
     current_time = datetime(2025, 10, 15, 15, 0, 0)
     device_priorities = {"Light": 2, "TV": 1, "Heater": 3}
-    
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=True,
@@ -68,7 +69,7 @@ def test_CT03_dispositivos_prioritarios(ems):
     initial_device_status = {"Light": True, "Refrigerator": True, "TV": True}
     current_time = datetime(2025, 10, 15, 10, 0, 0)
     device_priorities = {"Light": 3, "Refrigerator": 2, "TV": 1}
-    
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=False,
@@ -83,15 +84,25 @@ def test_CT03_dispositivos_prioritarios(ems):
         total_energy_used_today=40.0,
         scheduled_devices=[],
     )
-    
+
     expected_status = {"Light": False, "Refrigerator": False, "TV": True}
     assert result.device_status == expected_status
 
 
 def test_CT04_horario_noturno(ems):
-    initial_device_status = {"Washing Machine": True, "Dryer": True, "Security": False, "Refrigerator": True}
+    initial_device_status = {
+        "Washing Machine": True,
+        "Dryer": True,
+        "Security": False,
+        "Refrigerator": True,
+    }
     current_time = datetime(2025, 10, 15, 23, 30, 0)
-    device_priorities = {"Washing Machine": 2, "Dryer": 1, "Security": 1, "Refrigerator": 1}
+    device_priorities = {
+        "Washing Machine": 2,
+        "Dryer": 1,
+        "Security": 1,
+        "Refrigerator": 1,
+    }
 
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
@@ -108,7 +119,12 @@ def test_CT04_horario_noturno(ems):
         scheduled_devices=[],
     )
 
-    expected_status = {"Washing Machine": False, "Dryer": False, "Security": False, "Refrigerator": True}
+    expected_status = {
+        "Washing Machine": False,
+        "Dryer": False,
+        "Security": False,
+        "Refrigerator": True,
+    }
     assert result.device_status == expected_status
 
 
@@ -156,10 +172,11 @@ def test_CT06_regulacao_temperatura_resfriamento(ems):
         total_energy_used_today=30.0,
         scheduled_devices=[],
     )
-    
+
     expected_status = {"Cooling": True, "AC": False}
     assert result.device_status == expected_status
     assert result.temperature_regulation_active == True
+
 
 def test_CT07_limite_energia_excedido(ems):
     initial_device_status = {"TV": True, "Gaming Console": True, "Stereo": True}
@@ -180,9 +197,10 @@ def test_CT07_limite_energia_excedido(ems):
         total_energy_used_today=110.0,
         scheduled_devices=[],
     )
-    
-    expected_status = {'TV': False, 'Gaming Console': False, 'Stereo': False}
+
+    expected_status = {"TV": False, "Gaming Console": False, "Stereo": False}
     assert result.device_status == expected_status
+
 
 def test_CT08_agendamento_dispositivos(ems):
     initial_device_status = {"Dishwasher": False, "Washing Machine": False}
@@ -208,6 +226,7 @@ def test_CT08_agendamento_dispositivos(ems):
     expected_status = {"Dishwasher": True, "Washing Machine": False}
     assert result.device_status == expected_status
 
+
 def test_CT09_preco_acima_threshold(ems):
     initial_device_status = {"Water Heater": True, "Dryer": True}
     current_time = datetime(2025, 10, 15, 18, 0, 0)
@@ -231,11 +250,24 @@ def test_CT09_preco_acima_threshold(ems):
     expected_status = {"Water Heater": False, "Dryer": True}
     assert result.device_status == expected_status
 
+
 def test_CT10_combinacao_multipla(ems):
-    initial_device_status = {"Heating": False, "Light": True, "TV": True, "Security": False, "Refrigerator": True}
+    initial_device_status = {
+        "Heating": False,
+        "Light": True,
+        "TV": True,
+        "Security": False,
+        "Refrigerator": True,
+    }
     current_time = datetime(2025, 10, 15, 23, 0, 0)
-    device_priorities = {"Heating": 3, "Light": 2, "TV": 1, "Security": 1, "Refrigerator": 1}
-    
+    device_priorities = {
+        "Heating": 3,
+        "Light": 2,
+        "TV": 1,
+        "Security": 1,
+        "Refrigerator": 1,
+    }
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=True,
@@ -251,14 +283,21 @@ def test_CT10_combinacao_multipla(ems):
         scheduled_devices=[],
     )
 
-    expected_status = {'Heating': True, 'Light': False, 'TV': False, 'Security': False, 'Refrigerator': True}
+    expected_status = {
+        "Heating": True,
+        "Light": False,
+        "TV": False,
+        "Security": False,
+        "Refrigerator": True,
+    }
     assert result.device_status == expected_status
+
 
 def test_CT11_temperatura_na_faixa(ems):
     initial_device_status = {"Heating": False, "Cooling": False}
     current_time = datetime(2025, 10, 15, 12, 0, 0)
     device_priorities = {"Heating": 3, "Cooling": 3}
-    
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=False,
@@ -277,11 +316,12 @@ def test_CT11_temperatura_na_faixa(ems):
     expected_status = {"Heating": False, "Cooling": False}
     assert result.device_status == expected_status
 
+
 def test_CT12_loop_desligamento_parcial(ems):
     initial_device_status = {"Dev1": True, "Dev2": True, "Dev3": True}
     current_time = datetime(2025, 10, 15, 10, 0, 0)
     device_priorities = {"Dev1": 3, "Dev2": 1, "Dev3": 1}
-    
+
     result = ems.manage_energy(
         initial_device_status=initial_device_status,
         energy_saving_mode=False,
@@ -297,36 +337,29 @@ def test_CT12_loop_desligamento_parcial(ems):
         scheduled_devices=[],
     )
 
-    expected_status = {'Dev1': False, 'Dev2': False, 'Dev3': False}
+    expected_status = {"Dev1": False, "Dev2": False, "Dev3": False}
     assert result.device_status == expected_status
 
-def test_repr_methods():
-    # Teste para DeviceSchedule (pode manter como estava ou melhorar também)
-    schedule = DeviceSchedule("Forno", datetime(2025, 10, 24, 18, 30)) 
-    # Vamos verificar a string exata dele também, para garantir
-    expected_schedule_repr = "DeviceSchedule(device_name='Forno', scheduled_time=datetime.datetime(2025, 10, 24, 18, 30))"
-    # Pode ser necessário ajustar o formato exato da data/hora dependendo de como o repr original foi implementado
-    # assert repr(schedule) == expected_schedule_repr 
-    # Por enquanto, vamos manter o teste original dele para focar no EnergyManagementResult
-    assert repr(schedule) is not None 
 
-    # --- Teste modificado e mais rigoroso para EnergyManagementResult ---
-    # 1. Crie um objeto com valores que você conhece:
+def test_repr_methods():
+    schedule = DeviceSchedule("Forno", datetime(2025, 10, 24, 18, 30))
+    assert repr(schedule) is not None
+
     test_status = {"Luz": True, "Aquecedor": False}
     result = EnergyManagementResult(
         device_status=test_status,
         energy_saving_mode=False,
         temperature_regulation_active=True,
         total_energy_used=12.5,
-        devices_were_on=True
+        devices_were_on=True,
     )
 
-    # 2. Defina EXATAMENTE como a string de saída deve ser para esses valores:
-    expected_repr = (f"EnergyManagementResult(device_status={{'Luz': True, 'Aquecedor': False}}, "
-                     f"energy_saving_mode=False, "
-                     f"temperature_regulation_active=True, "
-                     f"total_energy_used=12.5, "
-                     f"devices_were_on=True)")
+    expected_repr = (
+        f"EnergyManagementResult(device_status={{'Luz': True, 'Aquecedor': False}}, "
+        f"energy_saving_mode=False, "
+        f"temperature_regulation_active=True, "
+        f"total_energy_used=12.5, "
+        f"devices_were_on=True)"
+    )
 
-    # 3. Compare a saída real com a saída esperada:
     assert repr(result) == expected_repr
