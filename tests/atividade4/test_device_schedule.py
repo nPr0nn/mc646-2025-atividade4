@@ -301,7 +301,32 @@ def test_CT12_loop_desligamento_parcial(ems):
     assert result.device_status == expected_status
 
 def test_repr_methods():
-    schedule = DeviceSchedule("Forno", datetime.now())
-    result = EnergyManagementResult({}, False, False, 0.0, True)
-    assert repr(schedule) is not None
-    assert repr(result) is not None
+    # Teste para DeviceSchedule (pode manter como estava ou melhorar também)
+    schedule = DeviceSchedule("Forno", datetime(2025, 10, 24, 18, 30)) 
+    # Vamos verificar a string exata dele também, para garantir
+    expected_schedule_repr = "DeviceSchedule(device_name='Forno', scheduled_time=datetime.datetime(2025, 10, 24, 18, 30))"
+    # Pode ser necessário ajustar o formato exato da data/hora dependendo de como o repr original foi implementado
+    # assert repr(schedule) == expected_schedule_repr 
+    # Por enquanto, vamos manter o teste original dele para focar no EnergyManagementResult
+    assert repr(schedule) is not None 
+
+    # --- Teste modificado e mais rigoroso para EnergyManagementResult ---
+    # 1. Crie um objeto com valores que você conhece:
+    test_status = {"Luz": True, "Aquecedor": False}
+    result = EnergyManagementResult(
+        device_status=test_status,
+        energy_saving_mode=False,
+        temperature_regulation_active=True,
+        total_energy_used=12.5,
+        devices_were_on=True
+    )
+
+    # 2. Defina EXATAMENTE como a string de saída deve ser para esses valores:
+    expected_repr = (f"EnergyManagementResult(device_status={{'Luz': True, 'Aquecedor': False}}, "
+                     f"energy_saving_mode=False, "
+                     f"temperature_regulation_active=True, "
+                     f"total_energy_used=12.5, "
+                     f"devices_were_on=True)")
+
+    # 3. Compare a saída real com a saída esperada:
+    assert repr(result) == expected_repr
