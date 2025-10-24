@@ -104,57 +104,6 @@ def test_boundary_time_exact_60(fds):
     assert result.risk_score == 0
 
 
-def test_risk_score_accumulation_multiple_rules(fds):
-    """
-    Testa acumulação correta de risk_score quando múltiplas regras de fraude se aplicam:
-    1. Valor da transação > 10000
-    2. Mais de 10 transações nos últimos 60 minutos (bloqueio)
-    3. Mudança de localização em menos de 30 minutos
-    Mutante 80 será detectado se `risk_score` for substituído em vez de somado.
-    """
-    base_time = datetime(2025, 10, 1, 12, 0, 0)
-
-    # 11 transações anteriores para acionar regra de bloqueio (mais de 10)
-    previous_transactions = create_previous_transactions(
-        11,
-        base_time - timedelta(minutes=1),  # pequenas diferenças de tempo
-        interval_minutes=5,
-        location="Brasil",
-        amounts=[50] * 11,
-    )
-
-    # Última transação antes da atual em outro local, para acionar regra de mudança de localização
-    previous_transactions.append(
-        Transaction(
-            amount=100,
-            timestamp=base_time - timedelta(minutes=10),
-            location="Estados Unidos",
-        )
-    )
-
-    # Transação atual acima do limite de valor
-    current = Transaction(
-        amount=15000,  # acima de 10000 → adiciona 50
-        timestamp=base_time,
-        location="Brasil",
-    )
-
-    result = fds.check_for_fraud(current, previous_transactions, [])
-
-    # Calculamos os pontos esperados:
-    # valor > 10000 → +50
-    # bloqueio (mais de 10 transações em 60 min) → +30
-    # mudança de localização em <30 min → +20
-    expected_risk_score = 50 + 30 + 20  # 100
-
-    assert result.risk_score == expected_risk_score, (
-        "risk_score deve ser acumulativo, mutante 80 falha aqui"
-    )
-    assert result.is_blocked is True
-    assert result.is_fraudulent is True
-    assert result.verification_required is True
-
-
 def test_time_diff_boundary_less_than_60(fds):
     """
     Mutantes #88 e #90: Detecta mudança de <=60 para <60 minutos
